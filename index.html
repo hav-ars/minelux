@@ -313,6 +313,10 @@
               <button class="platform-btn" id="pt-bed" onclick="setPlatform('Bedrock')">Bedrock</button>
             </div>
 
+            <small id="bedrock-note" style="display:none; color:#ff5555; font-size:12px; margin-top:10px; text-align:center;">
+              ⚠️ Gamertag Bedrock akan **otomatis** diawali garis bawah (`_`) dan spasi diganti garis bawah (`_`) untuk menyesuaikan bawaan server.
+            </small>
+
             <div class="actions" style="justify-content:center; margin-top:14px;">
               <button class="btn-primary" onclick="toStep2()">Lanjut</button>
               <button class="btn-ghost" onclick="closeTopup()">Batal</button>
@@ -369,6 +373,8 @@
   const slides = document.getElementById('slides');
   const tpFallback = document.getElementById('tp-fallback');
   const minecraftFallback = document.getElementById('minecraftFallback');
+  // Elemen baru untuk catatan Bedrock
+  const bedrockNote = document.getElementById('bedrock-note'); 
 
   let selectedPlatform = '';
   let selectedPkg = '';
@@ -422,6 +428,7 @@
     document.querySelectorAll('.pkg').forEach(p=>p.classList.remove('active'));
     tpFallback.style.display='none';
     sidebar.classList.remove('open'); hambox.classList.remove('open');
+    bedrockNote.style.display = 'none'; // Sembunyikan catatan saat membuka
   }
   function closeTopup(){ topupPopup.classList.remove('show'); topupPopup.setAttribute('aria-hidden','true'); }
 
@@ -442,6 +449,13 @@
     selectedPlatform = p;
     document.getElementById('pt-java').classList.toggle('active', p==='Java');
     document.getElementById('pt-bed').classList.toggle('active', p==='Bedrock');
+    
+    // Tampilkan/Sembunyikan catatan Bedrock
+    if (p === 'Bedrock') {
+        bedrockNote.style.display = 'block';
+    } else {
+        bedrockNote.style.display = 'none';
+    }
   }
 
   function choosePkg(el){
@@ -451,28 +465,27 @@
   }
 
   function submitTopup(){
-    let name = document.getElementById('tp-gamertag').value.trim(); // Simpan nama asli
-
-    // --- LOGIKA PERBAIKAN DIMULAI DI SINI ---
-    let gamertagForMessage = name;
-    if(selectedPlatform.toLowerCase() === "bedrock"){
-        // Tambahkan titik di awal jika Bedrock dan belum diawali titik
-        if(!name.startsWith(".")){
-            gamertagForMessage = "." + name;
-        }
-    }
-    // --- LOGIKA PERBAIKAN SELESAI DI SINI ---
+    let name = document.getElementById('tp-gamertag').value.trim(); 
 
     if(!name){ alert('Gamertag hilang. Kembali dan masukkan gamertag.'); return; }
     if(!selectedPlatform){ alert('Platform hilang. Kembali dan pilih platform.'); return; }
     if(!selectedPkg){ alert('Pilih paket coins terlebih dahulu.'); return; }
-    
-    // Gunakan gamertagForMessage yang sudah dimodifikasi (jika Bedrock)
+
+    let gamertagForMessage = name;
+    if(selectedPlatform.toLowerCase() === "bedrock"){
+      
+        gamertagForMessage = gamertagForMessage.replace(/\s/g, '_');
+        
+        if(!gamertagForMessage.startsWith("_")){
+            gamertagForMessage = "_" + gamertagForMessage;
+        }
+    }
+
     const messageLines = [
       'Halo Admin Minelux!',
       '',
       'Saya ingin TopUp Minelux Coins.',
-      `Gamertag: ${gamertagForMessage}`, // Menggunakan gamertagForMessage
+      `Gamertag: ${gamertagForMessage}`, 
       `Platform: ${selectedPlatform}`,
       `Paket: ${selectedPkg}`,
       '',
