@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Minelux Network — Official</title>
 
-<!-- Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -221,7 +220,6 @@
 </head>
 <body>
 
-  <!-- TOPBAR -->
   <div class="topbar" role="banner">
     <div class="brand" aria-hidden="false">
       <img src="minelux.webp" alt="Logo Minelux" id="logo">
@@ -232,14 +230,12 @@
     </div>
   </div>
 
-  <!-- HAMBURGER under logo -->
   <div class="hambox" id="hambox" title="Buka Menu" aria-label="Buka Menu">
     <div class="ham">
       <span></span><span></span><span></span>
     </div>
   </div>
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar" aria-hidden="true">
     <div class="nav-item active" data-page="home" onclick="navTo('home', this)">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3l9 7.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -255,9 +251,7 @@
     </div>
   </aside>
 
-  <!-- MAIN WRAPPER -->
   <div class="wrap" style="margin-top:36px;">
-    <!-- HOME -->
     <section id="home" class="page show" aria-labelledby="homeTitle">
       <div class="hero">
         <div class="hero-left">
@@ -279,7 +273,6 @@
       </div>
     </section>
 
-    <!-- STAFF -->
     <section id="staff" class="page" aria-labelledby="staffTitle">
       <h2 id="staffTitle" style="color:var(--accent-2)">Daftar Staff Minelux</h2>
       <div class="grid" style="margin-top:12px">
@@ -298,7 +291,6 @@
 
   <footer>© 2025 Minelux Network • Created by NuxxValll</footer>
 
-  <!-- TopUp popup (2-step in one modal) -->
   <div class="popup" id="topupPopup" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="tp-title">
       <div class="modal-head">
@@ -311,7 +303,6 @@
 
       <div class="slide-wrap" aria-live="polite">
         <div class="slides" id="slides">
-          <!-- Slide 1 -->
           <div class="slide" id="slide-1">
             <div class="input">
               <input id="tp-gamertag" type="text" placeholder="Masukkan Gamertag (contoh: Azahra_Candy)" aria-label="Gamertag">
@@ -328,7 +319,6 @@
             </div>
           </div>
 
-          <!-- Slide 2 -->
           <div class="slide" id="slide-2">
             <div style="text-align:center; color:var(--muted); font-size:14px">Pilih Paket Minelux Coins</div>
 
@@ -357,7 +347,6 @@
     </div>
   </div>
 
-  <!-- Minecraft fallback modal -->
   <div class="popup" id="minecraftFallback" style="display:none;">
     <div class="modal" role="dialog" aria-modal="true">
       <h3 style="color:var(--accent-2)">Buka Minecraft secara manual</h3>
@@ -462,16 +451,28 @@
   }
 
   function submitTopup(){
-    const name = document.getElementById('tp-gamertag').value.trim();
+    let name = document.getElementById('tp-gamertag').value.trim(); // Simpan nama asli
+
+    // --- LOGIKA PERBAIKAN DIMULAI DI SINI ---
+    let gamertagForMessage = name;
+    if(selectedPlatform.toLowerCase() === "bedrock"){
+        // Tambahkan titik di awal jika Bedrock dan belum diawali titik
+        if(!name.startsWith(".")){
+            gamertagForMessage = "." + name;
+        }
+    }
+    // --- LOGIKA PERBAIKAN SELESAI DI SINI ---
+
     if(!name){ alert('Gamertag hilang. Kembali dan masukkan gamertag.'); return; }
     if(!selectedPlatform){ alert('Platform hilang. Kembali dan pilih platform.'); return; }
     if(!selectedPkg){ alert('Pilih paket coins terlebih dahulu.'); return; }
-
+    
+    // Gunakan gamertagForMessage yang sudah dimodifikasi (jika Bedrock)
     const messageLines = [
       'Halo Admin Minelux!',
       '',
       'Saya ingin TopUp Minelux Coins.',
-      `Gamertag: ${name}`,
+      `Gamertag: ${gamertagForMessage}`, // Menggunakan gamertagForMessage
       `Platform: ${selectedPlatform}`,
       `Paket: ${selectedPkg}`,
       '',
